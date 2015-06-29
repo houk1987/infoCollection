@@ -24,6 +24,8 @@ public class TyCollection {
 
 	private static final String p = "http://bbs.tianya.cn";
 
+	private boolean isCancel;
+
 	{
 		clientTools = new HttpClientTools();
 		htmlParserTools = new HtmlParserTools();
@@ -32,54 +34,68 @@ public class TyCollection {
 
 	public void colletion(String url) {
 		if (url != null) {
-			System.out.println(p + url);
+			// System.out.println(p + url);
 			String html = clientTools.executeGet(p + url);
 			LinkedList<String> postUrls = getAllPostUrls(html);
 			if (postUrls != null) {
 				for (final String postUrl : postUrls) {
+					if (!pool.isShutdown()) {
+						pool.execute(new Runnable() {
 
-					pool.execute(new Runnable() {
-
-						public void run() {
-							   
-								//System.out.println(p + postUrl);
-								
-								//System.out.println(html);
-								
-									//HttpClientTools httpClientTools=new HttpClientTools();
-									String html = clientTools.executeGet(p+postUrl);
+							public void run() {
+								if(!pool.isShutdown()){
+									String html = clientTools.executeGet(p
+											+ postUrl);
 									count++;
-								
-								
-							
-						}
-					});
+									System.out
+											.println(!pool.isShutdown() + "抓取的数量:" + count);
+								}else{
+									System.out
+									.println("-------------------");
+								}
+							}
+						});
+					}
 				}
 			}
-			sum++;
-			System.out.println(sum);
-			String nextPageUrl = nextPageUrl(html);
-			if(nextPageUrl == null){
-				html = clientTools.executeGet(p + url);
-				nextPageUrl = nextPageUrl(html);
+			
+			if(!pool.isShutdown()&&count>sum){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				pool.shutdownNow();
+			}else{
+				String nextPageUrl = nextPageUrl(html);
+				if (nextPageUrl == null) {
+					html = clientTools.executeGet(p + url);
+					nextPageUrl = nextPageUrl(html);
+				}
+				colletion(nextPageUrl);
 			}
-			colletion(nextPageUrl);
+			
+		
+			
+			
+			
 		} else {
-			pool.shutdown();  
-	        while (true) {  
-	            if (pool.isTerminated()) {  
-	            	System.out.println(count);
-	                System.out.println("结束了！");  
-	                break;  
-	            }  
-	            try {
+			pool.shutdown();
+			while (true) {
+				if (pool.isTerminated()) {
+					System.out.println(count);
+					System.out.println("结束了！");
+					break;
+				}
+				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}  
+				}
 
-	        }
+			}
 		}
 	}
 
@@ -106,12 +122,25 @@ public class TyCollection {
 		}
 		return null;
 	}
+	
+	public void canecle(){
+		//pool.shutdownNow();
+		isCancel = true;
+		sum=count;
+		System.out.print("抓取的数量########" + sum);
+	}
+	
+	public int getCount() {
+		return count;
+	}
 
 	public static void main(String[] args) {
 		TyCollection tyCollection = new TyCollection();
-//		 tyCollection.colletion("/list-333-1.shtml");
-//		tyCollection.colletion("/list-culture-1.shtml");
+		// tyCollection.colletion("/list-333-1.shtml");
+		// tyCollection.colletion("/list-culture-1.shtml");
 		tyCollection.colletion("/list-1089-1.shtml");
+		
+		
 	}
 
 }
