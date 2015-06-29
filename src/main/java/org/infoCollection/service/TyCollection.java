@@ -59,26 +59,13 @@ public class TyCollection {
 				}
 			}
 			
-			if(!pool.isShutdown()&&count>sum){
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				pool.shutdownNow();
-			}else{
+			
 				String nextPageUrl = nextPageUrl(html);
 				if (nextPageUrl == null) {
 					html = clientTools.executeGet(p + url);
 					nextPageUrl = nextPageUrl(html);
 				}
 				colletion(nextPageUrl);
-			}
-			
-		
-			
-			
 			
 		} else {
 			pool.shutdown();

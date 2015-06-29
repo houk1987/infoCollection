@@ -84,9 +84,6 @@ public class CollectionFrame extends JFrame implements ActionListener {
 			tyCollection.colletion("/list-1089-1.shtml");
 			return true;
 		}
-		
-		
-		
 	}
 	
 	
