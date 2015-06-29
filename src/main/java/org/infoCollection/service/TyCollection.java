@@ -88,7 +88,7 @@ public class TyCollection {
 
 	private LinkedList<String> getAllPostUrls(String html) {
 		final List<Element> elements = htmlParserTools.getElements(new Source(
-				html), "a href=\"/post-" + "1089");
+				html), "a href=\"/post-" + "333");
 		LinkedList<String> postUrls = null;
 		if (elements != null) {
 			postUrls = new LinkedList<String>();
@@ -102,7 +102,7 @@ public class TyCollection {
 	private String nextPageUrl(String html) {
 		if (html != null && !html.isEmpty()) {
 			Element element = htmlParserTools.getElement(new Source(html),
-					"a href=\"/list.jsp?item=" + "1089" + "&nextid=");
+					"a href=\"/list.jsp?item=" + "333" + "&nextid=");
 			if (element != null) {
 				return element.getAttributes().getValue("href");
 			}
@@ -125,7 +125,7 @@ public class TyCollection {
 		TyCollection tyCollection = new TyCollection();
 		// tyCollection.colletion("/list-333-1.shtml");
 		// tyCollection.colletion("/list-culture-1.shtml");
-		tyCollection.colletion("/list-1089-1.shtml");
+		tyCollection.colletion("/list-333-1.shtml");
 		
 		
 	}
