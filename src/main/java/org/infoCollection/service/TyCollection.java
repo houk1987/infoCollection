@@ -36,6 +36,11 @@ public class TyCollection {
 		if (url != null) {
 			// System.out.println(p + url);
 			String html = clientTools.executeGet(p + url);
+			String nextPageUrl = nextPageUrl(html);
+			if (nextPageUrl == null) {
+				html = clientTools.executeGet(p + url);
+				nextPageUrl = nextPageUrl(html);
+			}
 			LinkedList<String> postUrls = getAllPostUrls(html);
 			if (postUrls != null) {
 				for (final String postUrl : postUrls) {
@@ -58,14 +63,8 @@ public class TyCollection {
 					}
 				}
 			}
-			
-			
-				String nextPageUrl = nextPageUrl(html);
-				if (nextPageUrl == null) {
-					html = clientTools.executeGet(p + url);
-					nextPageUrl = nextPageUrl(html);
-				}
-				colletion(nextPageUrl);
+				
+			colletion(nextPageUrl);
 			
 		} else {
 			pool.shutdown();

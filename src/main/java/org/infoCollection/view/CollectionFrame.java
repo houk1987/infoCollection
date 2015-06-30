@@ -81,7 +81,7 @@ public class CollectionFrame extends JFrame implements ActionListener {
 
 		@Override
 		protected Boolean doInBackground() throws Exception {
-			tyCollection.colletion("/list-1089-1.shtml");
+			tyCollection.colletion("/list-333-1.shtml");
 			return true;
 		}
 	}
